@@ -1,0 +1,75 @@
+Estilo da Cerveja;MIN SRM;MAX SRM
+LIGHT LAGER - Lite American Lager;2;3
+LIGHT LAGER - Standard American Lager;2;4
+LIGHT LAGER - Premium American Lager;2;6
+LIGHT LAGER - Munich Helles;3;5
+LIGHT LAGER - Dortmunder Export;4;6
+PILSNER - German Pilsner (Pils);2;5
+PILSNER - Bohemian Pilsener;3.5;6
+PILSNER - Classic American Pilsner;3;6
+EUROPEAN AMBER LAGER - Vienna Lager;10;16
+EUROPEAN AMBER LAGER - Oktoberfest/Märzen;7;14
+DARK LAGER - Dark American Lager;14;22
+DARK LAGER - Munich Dunkel;14;28
+DARK LAGER - Schwarzbier;17;30
+BOCK - Maibock/Helles Bock;6;11
+BOCK - Traditional Bock;14;22
+BOCK - Doppelbock;6;25
+BOCK - Eisbock;18;30
+LIGHT HYBRID BEER - Cream Ale;2.5;5
+LIGHT HYBRID BEER - Blonde Ale;3;6
+LIGHT HYBRID BEER - Kölsch;3.5;5
+LIGHT HYBRID BEER - American Wheat or Rye Beer;3;6
+AMBER HYBRID BEER - North German Altbier;13;19
+AMBER HYBRID BEER - California Common Beer;10;14
+AMBER HYBRID BEER - Düsseldorf Altbier;13;17
+ENGLISH PALE ALE - Standard/Ordinary Bitter;4;14
+ENGLISH PALE ALE - Special/Best/Premium Bitter;5;16
+ENGLISH PALE ALE - Extra Special/Strong Bitter (English Pale Ale);6;18
+SCOTTISH AND IRISH ALE - Scottish Light 60/-;9;17
+SCOTTISH AND IRISH ALE - Scottish Heavy 70/-;9;17
+SCOTTISH AND IRISH ALE - Scottish Export 80/-;9;17
+SCOTTISH AND IRISH ALE - Irish Red Ale;9;18
+SCOTTISH AND IRISH ALE - Strong Scotch Ale;14;25
+AMERICAN ALE - American Pale Ale;5;14
+AMERICAN ALE - American Amber Ale;10;17
+AMERICAN ALE - American Brown Ale;18;35
+ENGLISH BROWN ALE - Mild;12;25
+ENGLISH BROWN ALE - Southern English Brown Ale;19;35
+ENGLISH BROWN ALE - Northern English Brown Ale;12;22
+PORTER - Brown Porter;20;30
+PORTER - Robust Porter;22;35
+PORTER - Baltic Porter;17;30
+STOUT - Dry Stout;25;40
+STOUT - Sweet Stout;30;40
+STOUT - Oatmeal Stout;22;40
+STOUT - Foreign Extra Stout;30;40
+STOUT - American Stout;30;40
+STOUT - Imperial Stout;30;40
+INDIA PALE ALE (IPA) - English IPA;8;14
+INDIA PALE ALE (IPA) - American IPA;6;15
+INDIA PALE ALE (IPA) - Imperial IPA;8;15
+GERMAN WHEAT AND RYE BEER - Weizen/Weissbier;2;8
+GERMAN WHEAT AND RYE BEER - Dunkelweizen;14;23
+GERMAN WHEAT AND RYE BEER - Weizenbock;12;25
+GERMAN WHEAT AND RYE BEER - Roggenbier (German Rye Beer);14;19
+BELGIAN AND FRENCH ALE - Witbier;2;4
+BELGIAN AND FRENCH ALE - Belgian Pale Ale;8;14
+BELGIAN AND FRENCH ALE - Saison;5;12
+BELGIAN AND FRENCH ALE - Bière de Garde;6;19
+BELGIAN AND FRENCH ALE - Belgian Specialty Ale;Varies;
+SOUR ALE - Berliner Weisse;2;3
+SOUR ALE - Flanders Red Ale;10;16
+SOUR ALE - Flanders Brown Ale/Oud Bruin;15;20
+SOUR ALE - Straight (Unblended) Lambic;3;7
+SOUR ALE - Gueuze;3;7
+SOUR ALE - Fruit Lambic;3;7
+BELGIAN STRONG ALE - Belgian Blond Ale;4;6
+BELGIAN STRONG ALE - Belgian Dubbel;10;14
+BELGIAN STRONG ALE - Belgian Tripel;4.5;6
+BELGIAN STRONG ALE - Belgian Golden Strong Ale;4;6
+BELGIAN STRONG ALE - Belgian Dark Strong Ale;14;20
+STRONG ALE - Old Ale;10;22
+STRONG ALE - English Barleywine;8;22
+STRONG ALE - American Barleywine;10;19
+SMOKE-FLAVORED & WOOD-AGED BEER - Classic Rauchbier;14;22

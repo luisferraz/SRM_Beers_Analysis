@@ -12,20 +12,49 @@
 #*
 
 import cv2
+import os
+import csv
+import numpy as np
+
+class SRMColor (object):
+  def __init__(self, index):
+    #Valor SRM da Cor
+    self.index = index
+    #A cor (uma tupla LAB carregada da imagem)
+    self.colorValue = self.processSRMColor(index)
+
+  def processSRMColor(self, index):
+    filename = os.path.abspath(os.getcwd()) + "/SRM_BASE/SRM_{0}.PNG".format(index)
+    if not os.path.isfile(filename):
+      return None
+
+    img = cv2.imread(filename)
+    if img is None:
+      return None
+
+    #Pegamos o pixel do centro da imagem, e utilizamos a cor dele para definir a cor do SRM
+    x,y = img.shape[:2]
+    x = round (x/2)
+    y = round (y/2)
+
+    #Convertemos a imagem de RGB para LAB
+    img = cv2.cvtColor(img.astype(np.float32) / 255, cv2.COLOR_BGR2Lab)
+
+    #Retornamos a tupla com a cor do pixel central da imagem
+    return img[x,y]
+
+def loadBeersStyles():
+  file =  open("/home/luis/Faculdade/DS878_PDI/Analise_SRM_Beers_OpenCV/SRM Beers Values.csv")
+  csvFile = csv.DictReader(file, delimiter=";")
+  return csvFile
+  
 
 if __name__ == "__main__":
-  #SRMChart = "/home/luis/Faculdade/DS878_PDI/Trabalho/SRMChart.png"
-  SRMChart = "/home/luis/Faculdade/DS878_PDI/tarefa_4/sample.bmp"
-  img = cv2.imread(SRMChart)
+  SRMValues = [SRMColor(i) for i in range(1, 42)]
 
-  if img is None:
-      sys.Exit ('Falha ao carregar a imagem.')
+  print ([(i.index, i.colorValue) for i in SRMValues])
+  #arquivo = loadBeersStyles()
 
-  cv2.imshow("Antes da conversao", img)
-  cv2.waitKey(0)
-  img = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
-
-  cv2.imshow("Depois da conversao", img)
-  cv2.waitKey(0)
+  #print ([line for line in arquivo])
 
 

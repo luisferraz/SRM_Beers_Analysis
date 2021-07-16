@@ -43,18 +43,25 @@ class SRMColor (object):
     #Retornamos a tupla com a cor do pixel central da imagem
     return img[x,y]
 
+class BeerStyle(object):
+  def __init__(self, name, min_srm, max_srm):
+    self.name = name
+    self.minSRM = SRMColor(round (float (min_srm)))
+    self.maxSRM = SRMColor(round (float (max_srm)))
+
+
 def loadBeersStyles():
-  file =  open("/home/luis/Faculdade/DS878_PDI/Analise_SRM_Beers_OpenCV/SRM Beers Values.csv")
+  file =  open(os.path.abspath(os.getcwd()) + "/SRM_BASE/SRM Beers Values.csv")
   csvFile = csv.DictReader(file, delimiter=";")
   return csvFile
   
 
 if __name__ == "__main__":
-  SRMValues = [SRMColor(i) for i in range(1, 42)]
 
-  print ([(i.index, i.colorValue) for i in SRMValues])
-  #arquivo = loadBeersStyles()
+  base_file = loadBeersStyles()
 
-  #print ([line for line in arquivo])
+  BeerStyles = [BeerStyle(line["Estilo"], line["MIN_SRM"], line["MAX_SRM"]) for line in base_file]
+
+  [print (i.name, i.minSRM.index, i.minSRM.colorValue, i.maxSRM.index, i.maxSRM.colorValue) for i in BeerStyles]
 
 

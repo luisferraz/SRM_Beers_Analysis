@@ -1,4 +1,4 @@
-Estilo da Cerveja;MIN SRM;MAX SRM
+Estilo;MIN_SRM;MAX_SRM
 LIGHT LAGER - Lite American Lager;2;3
 LIGHT LAGER - Standard American Lager;2;4
 LIGHT LAGER - Premium American Lager;2;6
@@ -57,7 +57,6 @@ BELGIAN AND FRENCH ALE - Witbier;2;4
 BELGIAN AND FRENCH ALE - Belgian Pale Ale;8;14
 BELGIAN AND FRENCH ALE - Saison;5;12
 BELGIAN AND FRENCH ALE - Bière de Garde;6;19
-BELGIAN AND FRENCH ALE - Belgian Specialty Ale;Varies;
 SOUR ALE - Berliner Weisse;2;3
 SOUR ALE - Flanders Red Ale;10;16
 SOUR ALE - Flanders Brown Ale/Oud Bruin;15;20

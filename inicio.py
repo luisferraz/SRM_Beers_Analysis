@@ -72,7 +72,7 @@ def loadBeersStyles():
 
 
 # * Carrega a foto de uma cerveja, retornando a imagem original e em escala de cinza
-def loadBeerPhoto(fileName):
+def carregaFotoCerveja(fileName):
     img = cv2.imread(os.path.abspath(os.getcwd()) +
                      "/Fotos/{0}".format(fileName), cv2.IMREAD_UNCHANGED)
 
@@ -114,7 +114,9 @@ def extractBeerArea(imagem, cinza):
 
     cv2.drawContours(imgFilled, [maxContorno], 0, 255, thickness=cv2.FILLED)
 
-    return imgFilled, limiarOtsu
+    result = cv2.bitwise_and(imagem, imagem, mask=imgFilled)
+
+    return result, limiarOtsu
 
 
 if __name__ == "__main__":
@@ -127,6 +129,10 @@ if __name__ == "__main__":
     # Entao, para cada estilo, criamos um parametro de comparacao - SRM MIN e SRM MAX
     BeerStyles = [BeerStyle(line["Estilo"], line["MIN_SRM"],
                             line["MAX_SRM"]) for line in base_file]
+
+    fotoCerveja, fotoCervejaCinza = loadBeerPhoto("nova3370.png")
+
+    , limiarOtsu = extractBeerArea(beerPhoto, grayBeerPhoto)
 
     [print(i.name, i.minSRM.index, i.minSRM.colorValue,
            i.maxSRM.index, i.maxSRM.colorValue) for i in BeerStyles]

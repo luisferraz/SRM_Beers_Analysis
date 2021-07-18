@@ -11,12 +11,27 @@
 # *      -> ARRAY SRM para valor MAX
 # *
 
+#from parte2 import getDominantLABColor
 import cv2
 import os
 import csv
 import numpy as np
 
 # Classe que mapeia um nivel SRM a partir da imagem que o representa e salva seus valores convertidos para LAB
+
+
+def getDominantLABColor(img):
+    img = cv2.cvtColor(img.astype(np.float32) / 255, cv2.COLOR_BGR2Lab)
+    data = np.reshape(img, (-1, 3))
+    data = np.float32(data)
+
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
+    flags = cv2.KMEANS_RANDOM_CENTERS
+    compactness, labels, centers = cv2.kmeans(
+        data, 1, None, criteria, 10, flags)
+
+    dominantColor = centers[0].astype(np.float32)
+    return dominantColor
 
 
 class SRMColor (object):
@@ -33,22 +48,13 @@ class SRMColor (object):
             return None
 
         img = cv2.imread(filename)
-        if img is None:
-            return None
-
-        # Pegamos o pixel do centro da imagem, e utilizamos a cor dele para definir a cor do SRM
-        x, y = img.shape[:2]
-        x = round(x/2)
-        y = round(y/2)
-
-        # Convertemos a imagem de RGB para LAB
-        img = cv2.cvtColor(img.astype(np.float32) / 255, cv2.COLOR_BGR2Lab)
-
-        # Retornamos a tupla com a cor do pixel central da imagem
-        return img[x, y]
+        dominantColor = getDominantLABColor(img)
+        return dominantColor
 
 
 # Classe que compoe um estilo de cerveja, com seu nome, SRM Minimo e Maximo, utilizado para a comparacao
+
+
 class BeerStyle(object):
     def __init__(self, name, min_srm, max_srm):
         self.name = name
@@ -65,7 +71,56 @@ def loadBeersStyles():
     return csvFile
 
 
+# * Carrega a foto de uma cerveja, retornando a imagem original e em escala de cinza
+def loadBeerPhoto(fileName):
+    img = cv2.imread(os.path.abspath(os.getcwd()) +
+                     "/Fotos/{0}".format(fileName), cv2.IMREAD_UNCHANGED)
+
+    # Como as imagens estao sendo gravadas em 4032x3024, reduzimos para 30% do tamanho
+    scale = 30
+    width = int(img.shape[1] * scale / 100)
+    height = int(img.shape[0] * scale / 100)
+    dim = (width, height)
+
+    resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+
+    return resized, cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+
+# * Rotina para deteccao de borda
+# * Utiliza um filtro Gaussiano com escalar alto ou baixo
+# * Para então por um Threshold utilizando o algoritmo de Otsu
+# * Por fim, executa o algoritmo de Canny para encontrar a borda da imagem que representa a area ocupada pela cerveja
+
+
+def dedectaBorda(imagem, alto):
+    filtrada = cv2.GaussianBlur(imagem, ((21, 21) if alto else (3, 3)), 0)
+    #filtrada = cv2.medianBlur(imagem, 7)
+    otsuValue, limiarizada = cv2.threshold(
+        filtrada, 127, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+
+    edge = cv2.Canny(limiarizada, 100, 200)
+    return edge, otsuValue
+
+# * Rotina que recebe uma imagem original
+
+
+def extractBeerArea(imagem, cinza):
+    borda, limiarOtsu = dedectaBorda(cinza, True)
+    imgFilled = np.zeros_like(borda)
+    contornos = cv2.findContours(
+        borda, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contornos = contornos[0] if len(contornos) == 2 else contornos[1]
+    maxContorno = max(contornos, key=cv2.contourArea)
+
+    cv2.drawContours(imgFilled, [maxContorno], 0, 255, thickness=cv2.FILLED)
+
+    return imgFilled, limiarOtsu
+
+
 if __name__ == "__main__":
+    # ? PARTE 1 - PROCESSAMENTO DA BASE SRM
+    # * Principais estilos de cerveja e seus valores SRM Minimo e Máximo
+
     # Carregamos o arquivo CSV com os estilos de cerveja
     base_file = loadBeersStyles()
 

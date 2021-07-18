@@ -8,7 +8,6 @@ import os
 
 
 def loadBeerPhoto(fileName):
-
     img = cv2.imread(os.path.abspath(os.getcwd()) +
                      "/Fotos/{0}".format(fileName), cv2.IMREAD_UNCHANGED)
 
@@ -18,40 +17,50 @@ def loadBeerPhoto(fileName):
     height = int(img.shape[0] * scale / 100)
     dim = (width, height)
 
-    return cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+    resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+
+    return resized, cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 
 
-def threshImg(image):
-    cinza = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    filtrada = cv2.GaussianBlur(cinza, (201, 201), 0)
-    t, limiarizada = cv2.threshold(
-        filtrada, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+def dedectaBorda(imagem, alto):
+    filtrada = cv2.GaussianBlur(imagem, ((21, 21) if alto else (3, 3)), 0)
+    #filtrada = cv2.medianBlur(imagem, 7)
+    otsuValue, limiarizada = cv2.threshold(
+        filtrada, 127, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
 
-    print('otsu value:{}'.format(t))
-    masked = cv2.bitwise_and(image, image, mask=limiarizada)
-
-    limiar = []
-    limiar.append(filtrada)
-    limiar.append(limiarizada)
-    limiar.append(masked)
-
-    for i in range(len(limiar)):
-        cv2.imshow(str(i), limiar[i])
-
-    cv2.waitKey(0)
+    edge = cv2.Canny(limiarizada, 100, 200)
+    return edge, otsuValue
 
 
-def extractBeerArea(image):
-    original = image.copy()
-    imgthreshelded = threshImg(image)
-    masked = cv2.bitwise_and(image, image, mask=imgthreshelded)
+def extractBeerArea(imagem, cinza):
+    original = imagem.copy()
+    borda, limiarOtsu = dedectaBorda(cinza, True)
+    imgFilled = np.zeros_like(borda)
+    contornos = cv2.findContours(
+        borda, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contornos = contornos[0] if len(contornos) == 2 else contornos[1]
+    maxContorno = max(contornos, key=cv2.contourArea)
+
+    cv2.drawContours(imgFilled, [maxContorno], 0, 255, thickness=cv2.FILLED)
+
+    return imgFilled, limiarOtsu
 
 
 if __name__ == "__main__":
     # Parte 2
     # Iniciamos a segunda parte lendo a imagem da cerveja
 
-    beerPhoto = loadBeerPhoto("nova3368.png")
-    threshImg(beerPhoto)
-    # extractBeerArea(beerPhoto)
+    beerPhoto, grayBeerPhoto = loadBeerPhoto("nova3370.png")
+
+    beerArea, limiarOtsu = extractBeerArea(beerPhoto, grayBeerPhoto)
+
+    rAnd = cv2.bitwise_and(beerPhoto, beerPhoto, mask=beerArea)
+
+    cv2.imshow("Original", beerPhoto)
+    cv2.imshow("grayBeerPhoto", grayBeerPhoto)
+    cv2.imshow("beerArea", beerArea)
+    cv2.imshow("rAnd", rAnd)
+
+    cv2.waitKey(0)
+
     cv2.destroyAllWindows()

@@ -116,6 +116,9 @@ def extractBeerArea(imagem):
 
     return imgFilled
 
+# * Funcao para transformação de uma tupla colorscale XYZ para sRGB, para utilizacao na rotina deltaE
+# * Source: http://home.cis.rit.edu/~cnspci/media/software/xyz2srgb.py
+# * 
 def xyz2srgb(tristimulus, scale=True):
    m = np.matrix([[ 3.2404542, -1.5371385, -0.4985314],
                      [-0.9692660,  1.8760108,  0.0415560],
@@ -143,6 +146,7 @@ def xyz2srgb(tristimulus, scale=True):
    return sRGB[0,0], sRGB[1,0], sRGB[2,0]
 
 #* Funcao que calcula a distancia entre duas cores
+#* Source: http://home.cis.rit.edu/~cnspci/media/software/deltae.pro
 #* Recebe as cores RGB
 #* Converte as cores para LAB (colorspace device independent)
 #* Calcula a distancia Euclidiana entre as duas cores
@@ -216,6 +220,7 @@ def processaComparaFotos (BeerStyles):
     for dirpath, _, files in os.walk (os.path.join(os.getcwd() + "/Fotos")):
         print (dirpath)
         for file in files:
+            #? PARTE 2 - PRÉ-PROCESSAMENTO DA FOTO DA CERVEJA
             #? Começamos carregando a foto original e em escala de cinza do copo de cerveja 
             fotoCerveja, fotoCervejaCinza = carregaFotoCerveja(os.path.join(dirpath, file))
             salvaImg(fotoCervejaCinza, "gray_" + file)
@@ -246,15 +251,15 @@ def processaComparaFotos (BeerStyles):
             mascaraInterese = extractBeerArea(borda)
             salvaImg (mascaraInterese, "mask_" + file)
 
-            #? Por fim, aplicamos a mascara com a area de interesse na imagem original 
+            #? Por fim, aplicamos a mascara com a area de interesse na imagem original (utilizando um AND pixel a pixel)
             #? para extrair a parte util para a analise
             areaInteresse = cv2.bitwise_and(fotoCerveja, fotoCerveja, mask=mascaraInterese)
             salvaImg (areaInteresse, "ROI_" + file)
 
-            # ? PARTE 3 - COMPARACAO DA COR DA FOTO COM A BASE E DEFINICAO DO ESTILO
-            # * Define a cor dominante no colorspace LAB (device independant) da area da cerveja
-            # * Compara a cor dominante com as cores da base SRM para cada estilo, usando Distancia Euclidiana (DeltaE)
-            # * Retorna os Estilos de cerveja provaveis para a imagem, em relação a proximidade das cores
+            #? PARTE 3 - COMPARACAO DA COR DA FOTO COM A BASE E DEFINICAO DO ESTILO
+            #* Define a cor dominante no colorspace LAB (device independant) da area da cerveja
+            #* Compara a cor dominante com as cores da base SRM para cada estilo, usando Distancia Euclidiana (DeltaE)
+            #* Retorna os Estilos de cerveja provaveis para a imagem, em relação a proximidade das cores
 
             corDominante = getDominantColor(areaInteresse)
 
@@ -276,13 +281,4 @@ if __name__ == "__main__":
     BeerStyles = [BeerStyle(line["Estilo"], line["MIN_SRM"],
                             line["MAX_SRM"]) for line in base_file]
 
-    # ? PARTE 2 - PRÉ-PROCESSAMENTO DA FOTO DA CERVEJA
-    # * Carrega a foto do copo de cerveja
-    # * Aplica:
-    # * - Filtragem: Filtro Gaussiano (baixo e alto); Filtro por Mediana,
-    # * - Limiarização: Otsu
-    # * - Detecção de borda: Canny
-    # * Com a borda delimitada apenas a parte da cerveja,
-    # * aplica-se um AND bit a bit para extrair apenas a area de interesse
-    #
     processaComparaFotos(BeerStyles)
